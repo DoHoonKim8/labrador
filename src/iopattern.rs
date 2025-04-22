@@ -1,6 +1,3 @@
-use ark_relations::r1cs::ConstraintSystemRef;
-use nimue::{DuplexHash, IOPattern};
-
 use lattirust_arithmetic::challenge_set::labrador_challenge_set::LabradorChallengeSet;
 use lattirust_arithmetic::challenge_set::weighted_ternary::WeightedTernaryChallengeSet;
 use lattirust_arithmetic::nimue::iopattern::{
@@ -8,12 +5,15 @@ use lattirust_arithmetic::nimue::iopattern::{
 };
 use lattirust_arithmetic::ring::{PolyRing, Z2};
 use lattirust_arithmetic::traits::FromRandomBytes;
+use nimue::{DuplexHash, IOPattern};
+use relations::r1cs::R1CS;
+use relations::Relation;
 
-use crate::binary_r1cs::util::{BinaryR1CSCRS};
+use crate::binary_r1cs::util::BinaryR1CSCRS;
 use crate::common_reference_string::CommonReferenceString;
 
 pub trait LabradorIOPattern<R, H>:
-    SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern
+SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern
 where
     R: PolyRing,
     H: DuplexHash<u8>,
@@ -59,12 +59,13 @@ where
             .absorb_symmetric_matrix::<R>(crs.r, "prover message 5 (G)")
             .absorb_symmetric_matrix::<R>(crs.r, "prover message 5 (H)")
     }
+
     fn labrador_binaryr1cs_io(
         self,
-        r1cs: &ConstraintSystemRef<Z2>,
+        size: &<R1CS<Z2> as Relation>::Size,
         crs: &BinaryR1CSCRS<R>,
     ) -> Self {
-        let k = r1cs.num_constraints();
+        let k = size.num_constraints;
         let secparam = crs.security_parameter;
         self.absorb_vector::<R>(crs.A.nrows(), "prover message 1 (t)")
             .squeeze_binary_matrix(secparam, k, "verifier message 1 (alpha)")
@@ -81,5 +82,4 @@ where
     LabradorChallengeSet<R>: FromRandomBytes<R>,
     WeightedTernaryChallengeSet<R>: FromRandomBytes<R>,
     Self: SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern,
-{
-}
+{}

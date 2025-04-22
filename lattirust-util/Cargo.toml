@@ -1,9 +1,0 @@
-[package]
-name = "lattirust-util"
-version = "0.0.1-alpha"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-log = "0.4.22"

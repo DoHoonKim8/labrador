@@ -100,7 +100,7 @@ impl<R: PolyRing> BinaryR1CSCRS<R> {
             (BigUint::from(15u32) * q).to_f64().unwrap() / SECURITY_PARAMETER as f64,
         );
 
-        let rng = &mut rand::rngs::OsRng;
+        let rng = &mut rand::thread_rng();
 
         let commitment_output_size = h.div_ceil(d);
         Self {
@@ -141,7 +141,7 @@ impl<R: PolyRing> BinaryR1CSCRS<R> {
         let num_quad_constraints = commitment_output_size + 3 * n_pr; // m/d + 3n/d
         let num_constant_quad_constraints = 4 + 1 + SECURITY_PARAMETER;
 
-        let rng = &mut rand::rngs::OsRng;
+        let rng = &mut rand::thread_rng();
         CommonReferenceString::<R>::new(
             r_pr,
             n_pr,

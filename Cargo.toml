@@ -1,14 +1,24 @@
-[workspace]
-members = [
-    "lattirust-arithmetic",
-    "lattice-estimator",
-    "relations",
-    "labrador",
-    "lova"
-]
-resolver = "2"
+[package]
+name = "labrador"
+version = "0.0.1-alpha"
+edition = "2021"
 
-[workspace.metadata.docs.rs]
-# To build locally, use 
-# RUSTDOCFLAGS="--html-in-header docs-header.html" cargo doc --no-deps --document-private-items --open
-rustdoc-args = ["--html-in-header", "docs-header.html"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lattirust-arithmetic = { version = "0.0.1-alpha", git = "https://github.com/lattirust/lattirust" }
+lattice-estimator = { version = "0.0.1-alpha", git = "https://github.com/lattirust/lattirust" }
+lattirust-util = { version = "0.0.1-alpha", git = "https://github.com/lattirust/lattirust" }
+relations = { version = "0.0.1-alpha", git = "https://github.com/lattirust/lattirust" }
+ark-std = "0.5.0"
+log = "0.4.22"
+nimue = "0.1.0"
+num-bigint = "0.4.6"
+num-traits = "0.2.19"
+pretty_env_logger = "0.5.0"
+rayon = "1.10.0"
+serde = "1.0.215"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+indicatif = "0.17.9"
+derive_more = "2.0.1"

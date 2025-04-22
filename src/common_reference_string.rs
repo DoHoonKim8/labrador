@@ -1,21 +1,19 @@
 #![allow(non_snake_case)]
 
-use ark_std::rand;
-use ark_std::rand::thread_rng;
-use num_traits::{Float, ToPrimitive};
 use std::cmp::{max, max_by};
 use std::fmt::Debug;
 
+use ark_std::rand;
 use lattice_estimator::msis;
-use lattice_estimator::msis::{msis_h_128_l2, MSIS};
+use lattice_estimator::msis::{MSIS, msis_h_128_l2};
 use lattice_estimator::norms::Norm;
-use serde::{Deserialize, Serialize};
-use tracing::info;
-
 use lattirust_arithmetic::challenge_set::labrador_challenge_set::LabradorChallengeSet;
 use lattirust_arithmetic::linear_algebra::Matrix;
 use lattirust_arithmetic::ring::PolyRing;
+use num_traits::{Float, ToPrimitive};
 use relations::principal_relation::Size;
+use serde::{Deserialize, Serialize};
+use tracing::info;
 
 /// Common reference string for one round of the LaBRADOR protocol
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -70,7 +68,7 @@ pub struct FoldedSize {
     pub size_t: usize, // Number of Rq-elements in the decomposed t-witness
     pub size_g: usize, // Number of Rq-elements in the decomposed g-witness
     pub size_h: usize, // Number of Rq-elements in the decomposed h-witness
-    pub nu: usize, 
+    pub nu: usize,
     pub mu: usize,
 }
 
@@ -133,7 +131,7 @@ impl<R: PolyRing> CommonReferenceString<R> {
     }
 
     pub fn new_for_size(size: Size) -> CommonReferenceString<R> {
-        let mut rng = thread_rng();
+        let mut rng = rand::thread_rng();
         Self::new(
             size.num_witnesses,
             size.witness_len,
@@ -240,7 +238,7 @@ impl<R: PolyRing> CommonReferenceString<R> {
             norm: Norm::L2,
         };
         let k1 = msis_h_128_l2(&msis_2).unwrap(); // TODO: Switch back to lattice estimator
-                                                  // let k1 = find_optimal_h(&msis_2, SECURITY_PARAMETER).expect(format!("failed to find secure rank for {msis_2}. Are there enough constraints in your system?").as_str());
+        // let k1 = find_optimal_h(&msis_2, SECURITY_PARAMETER).expect(format!("failed to find secure rank for {msis_2}. Are there enough constraints in your system?").as_str());
         let k2 = k1;
         msis_2 = msis_2.with_h(k1).with_length_bound(2. * beta_prime(k));
         info!(
@@ -411,7 +409,7 @@ impl<R: PolyRing> CommonReferenceString<R> {
         };
 
         // There might be several empty witness vectors for padding (for example, if n_next is small)
-        debug_assert!(best_nu * z_decomp_len >= folded_size.num_witnesses_z()); 
+        debug_assert!(best_nu * z_decomp_len >= folded_size.num_witnesses_z());
         debug_assert!(best_mu >= folded_size.num_witnesses_t_g_h());
 
         folded_size
