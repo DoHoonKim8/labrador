@@ -1,11 +1,10 @@
-
 use nimue::{Arthur, IOPattern, Merlin, ProofResult};
 
 use lattirust_arithmetic::challenge_set::labrador_challenge_set::LabradorChallengeSet;
 use lattirust_arithmetic::challenge_set::weighted_ternary::WeightedTernaryChallengeSet;
 use lattirust_arithmetic::nimue::iopattern::{SerIOPattern, SqueezeFromRandomBytes};
-use lattirust_arithmetic::ring::{PolyRing, Z2};
 use lattirust_arithmetic::ring::representatives::WithSignedRepresentative;
+use lattirust_arithmetic::ring::{PolyRing, Z2};
 use lattirust_arithmetic::traits::FromRandomBytes;
 use relations::principal_relation::PrincipalRelation;
 use relations::r1cs::R1CS;
@@ -66,8 +65,7 @@ where
         index_in: &Self::IndexIn,
         instance_in: &Self::InstanceIn,
         arthur: &mut Arthur,
-    ) -> ProofResult<(Self::IndexOut, Self::InstanceOut)>
-    {
+    ) -> ProofResult<(Self::IndexOut, Self::InstanceOut)> {
         verify_reduction_binaryr1cs_labradorpr(arthur, pp, index_in, instance_in)
     }
 }

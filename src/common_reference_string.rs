@@ -5,7 +5,7 @@ use std::fmt::Debug;
 
 use ark_std::rand;
 use lattice_estimator::msis;
-use lattice_estimator::msis::{MSIS, msis_h_128_l2};
+use lattice_estimator::msis::{msis_h_128_l2, MSIS};
 use lattice_estimator::norms::Norm;
 use lattirust_arithmetic::challenge_set::labrador_challenge_set::LabradorChallengeSet;
 use lattirust_arithmetic::linear_algebra::Matrix;
@@ -238,7 +238,7 @@ impl<R: PolyRing> CommonReferenceString<R> {
             norm: Norm::L2,
         };
         let k1 = msis_h_128_l2(&msis_2).unwrap(); // TODO: Switch back to lattice estimator
-        // let k1 = find_optimal_h(&msis_2, SECURITY_PARAMETER).expect(format!("failed to find secure rank for {msis_2}. Are there enough constraints in your system?").as_str());
+                                                  // let k1 = find_optimal_h(&msis_2, SECURITY_PARAMETER).expect(format!("failed to find secure rank for {msis_2}. Are there enough constraints in your system?").as_str());
         let k2 = k1;
         msis_2 = msis_2.with_h(k1).with_length_bound(2. * beta_prime(k));
         info!(

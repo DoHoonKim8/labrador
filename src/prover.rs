@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use std::fmt::Debug;
+use std::time::Instant;
 
 use nimue::{Merlin, ProofResult};
 use rayon::prelude::*;
@@ -14,10 +15,11 @@ use lattirust_arithmetic::linear_algebra::inner_products::{inner_products, inner
 use lattirust_arithmetic::linear_algebra::Vector;
 use lattirust_arithmetic::nimue::merlin::SerMerlin;
 use lattirust_arithmetic::nimue::traits::ChallengeFromRandomBytes;
-use lattirust_arithmetic::ring::PolyRing;
 use lattirust_arithmetic::ring::representatives::WithSignedRepresentative;
+use lattirust_arithmetic::ring::PolyRing;
 use lattirust_arithmetic::traits::FromRandomBytes;
 use relations::principal_relation::{Index, Instance, Witness};
+use tracing::info_span;
 
 use crate::common_reference_string::CommonReferenceString;
 use crate::shared::{
@@ -59,6 +61,8 @@ where
     // let s_mat = Matrix::<R>::from_columns(&witness.s); // s_mat = [s_1 | ... | s_r] in Rq^{n x r}
     // let t = &crs.A * &s_mat; // t = A * s_mat in Rq^{k x r}
     // let t_decomp = decompose_balanced_polyring(&t, crs.b1, Some(crs.t1)); // t_decomp = [t_1 | ... | t_r] in Rq^{k x r}
+    let span = info_span!("Computing the first outer commitment");
+    let _ = span.enter();
     let t: Vec<Vector<R>> = witness
         .s
         .par_iter()
@@ -73,11 +77,14 @@ where
     let G_flat = flatten_vec_symmetric_matrix(&G_decomp); // t2 * r * r
 
     let u_1 = commit(&crs.B, &t_flat) + commit(&crs.C, &G_flat);
+    drop(span);
     merlin
         .absorb_vector(&u_1)
         .expect("error absorbing prover message 1");
 
     // Challenge 1
+    let span = info_span!("Computing JL projection");
+    let _ = span.enter();
     let num_projections = 256; // TODO: set in CRS
     let Pi = merlin
         .challenge_matrices::<R, WeightedTernaryChallengeSet<R>>(num_projections, crs.n, crs.r)
@@ -94,6 +101,7 @@ where
             p[j] += pi_ij_vec.dot(&s_i_vec);
         }
     }
+    drop(span);
     merlin
         .absorb_vector_canonical::<R::BaseRing>(&p)
         .expect("error absorbing prover message 2");
@@ -107,6 +115,8 @@ where
         .expect("error squeezing verifier message 2 (omega)");
 
     // Message 3
+    let span = info_span!("Computing aggregation");
+    let _ = span.enter();
     let phi__ = compute_phi__(crs, index, instance, &Pi, &psi, &omega);
     let mut b__ = vec![R::zero(); crs.num_aggregs];
     let a__ = compute_a__(crs, instance, &psi);
@@ -119,6 +129,7 @@ where
             b__[k] += &phi__[k][i].dot(&witness.s[i]);
         }
     }
+    drop(span);
 
     merlin
         .absorb_vec(&b__)
@@ -133,6 +144,8 @@ where
         .expect("error squeezing verifier message 3 (beta)");
 
     // Message 4
+    let span = info_span!("Computing the second outer commitment");
+    let _ = span.enter();
     let phi = compute_phi(crs, instance, &alpha, &beta, &phi__);
 
     let two_inv = R::inverse(&R::try_from(2u64).unwrap()).unwrap();
@@ -148,6 +161,7 @@ where
     let H_flat = flatten_vec_symmetric_matrix(&H_decomp); // t1 * r * r
 
     let u_2 = commit(&crs.D, &H_flat);
+    drop(span);
     merlin
         .absorb_vector(&u_2)
         .expect("error absorbing prover message 4");
@@ -172,6 +186,9 @@ where
     let next_size = crs.next_size();
 
     // Compute next witnes
+    let span = info_span!("Compute the amortized opening");
+    let now = Instant::now();
+    let _ = span.enter();
     let z: Vector<R> = witness
         .clone()
         .s
@@ -181,6 +198,11 @@ where
         .sum();
 
     let z_decomp = decompose_vec_polyring(&z.as_slice(), crs.b, Some(2usize));
+    println!(
+        "Time elapsed for computing the amortized opening : {:?}",
+        now.elapsed()
+    );
+    drop(span);
 
     let mut layouter = Layouter::<R>::new(next_size);
 

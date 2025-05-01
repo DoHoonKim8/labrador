@@ -9,13 +9,13 @@ use lattirust_arithmetic::decomposition::DecompositionFriendlySignedRepresentati
 use lattirust_arithmetic::linear_algebra::Vector;
 use lattirust_arithmetic::nimue::merlin::SerMerlin;
 use lattirust_arithmetic::nimue::traits::ChallengeFromRandomBytes;
-use lattirust_arithmetic::ring::PolyRing;
 use lattirust_arithmetic::ring::representatives::WithSignedRepresentative;
+use lattirust_arithmetic::ring::PolyRing;
 use lattirust_arithmetic::traits::FromRandomBytes;
 use relations::{principal_relation, Relation};
 
+use crate::binary_r1cs::util::{reduce, BinaryR1CSCRS, BinaryR1CSTranscript};
 use crate::binary_r1cs::BinaryR1CS;
-use crate::binary_r1cs::util::{BinaryR1CSCRS, BinaryR1CSTranscript, reduce};
 use crate::prover::prove_principal_relation;
 use crate::util::{concat, embed, lift};
 

@@ -7,14 +7,14 @@ use lattirust_arithmetic::challenge_set::labrador_challenge_set::LabradorChallen
 use lattirust_arithmetic::challenge_set::weighted_ternary::WeightedTernaryChallengeSet;
 use lattirust_arithmetic::decomposition::DecompositionFriendlySignedRepresentative;
 use lattirust_arithmetic::nimue::iopattern::{SerIOPattern, SqueezeFromRandomBytes};
-use lattirust_arithmetic::ring::{PolyRing, Pow2CyclotomicPolyRingNTT};
 use lattirust_arithmetic::ring::representatives::WithSignedRepresentative;
 use lattirust_arithmetic::ring::Zq2;
+use lattirust_arithmetic::ring::{PolyRing, Pow2CyclotomicPolyRingNTT};
 use lattirust_arithmetic::traits::FromRandomBytes;
-use relations::{test_completeness_with_init, test_soundness_with_init};
 use relations::principal_relation::PrincipalRelation;
 use relations::principal_relation::Size;
 use relations::reduction::Reduction;
+use relations::{test_completeness_with_init, test_soundness_with_init};
 
 use crate::common_reference_string::CommonReferenceString;
 use crate::prover::prove_principal_relation_oneround;
@@ -127,3 +127,11 @@ test_soundness_with_init!(
     TEST_SIZE,
     init
 );
+
+const FALCON_AGG_TEST_SIZE: Size = Size {
+    num_witnesses: 600, // 200 signatures
+    witness_len: 512,
+    norm_bound_sq: 0.,
+    num_constraints: 200,
+    num_constant_constraints: 0,
+};

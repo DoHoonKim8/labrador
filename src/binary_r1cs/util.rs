@@ -7,10 +7,10 @@ use derive_more::Display;
 use num_bigint::BigUint;
 use num_traits::{ToPrimitive, Zero};
 
-use lattice_estimator::msis::{MSIS, msis_h_128_linf};
+use lattice_estimator::msis::{msis_h_128_linf, MSIS};
 use lattice_estimator::norms::Norm;
-use lattirust_arithmetic::linear_algebra::{Matrix, SymmetricMatrix};
 use lattirust_arithmetic::linear_algebra::Vector;
+use lattirust_arithmetic::linear_algebra::{Matrix, SymmetricMatrix};
 use lattirust_arithmetic::ring::{PolyRing, Z2};
 use relations::principal_relation::{
     ConstantQuadraticConstraint, Index, Instance, QuadraticConstraint, Size,

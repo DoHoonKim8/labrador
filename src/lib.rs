@@ -1,9 +1,10 @@
 pub mod binary_r1cs;
 pub mod common_reference_string;
+pub mod falcon_agg;
 pub mod iopattern;
 pub mod prover;
 pub mod shared;
+mod test;
 pub mod util;
 pub mod verifier;
-mod test;
 //pub mod r1cs;

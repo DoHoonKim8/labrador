@@ -13,7 +13,7 @@ use crate::binary_r1cs::util::BinaryR1CSCRS;
 use crate::common_reference_string::CommonReferenceString;
 
 pub trait LabradorIOPattern<R, H>:
-SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern
+    SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern
 where
     R: PolyRing,
     H: DuplexHash<u8>,
@@ -82,4 +82,5 @@ where
     LabradorChallengeSet<R>: FromRandomBytes<R>,
     WeightedTernaryChallengeSet<R>: FromRandomBytes<R>,
     Self: SerIOPattern + SqueezeFromRandomBytes + RatchetIOPattern,
-{}
+{
+}
