@@ -4,6 +4,7 @@ use lattirust_arithmetic::decomposition::DecompositionFriendlySignedRepresentati
 use lattirust_arithmetic::linear_algebra::{Matrix, SymmetricMatrix, Vector};
 use lattirust_arithmetic::ring::representatives::WithSignedRepresentative;
 use lattirust_arithmetic::ring::PolyRing;
+use num_traits::zero;
 use relations::principal_relation::{Index, Instance, QuadraticConstraint, Size};
 
 use crate::common_reference_string::{CommonReferenceString, FoldedSize};
@@ -402,7 +403,7 @@ pub fn compute_a__<R: PolyRing>(
                         Some(a) => Some(a + prod),
                     }
                 })
-                .unwrap()
+                .unwrap_or(SymmetricMatrix::<R>::zero(_crs.r))
         })
         .collect()
 }

@@ -127,11 +127,3 @@ test_soundness_with_init!(
     TEST_SIZE,
     init
 );
-
-const FALCON_AGG_TEST_SIZE: Size = Size {
-    num_witnesses: 600, // 200 signatures
-    witness_len: 512,
-    norm_bound_sq: 0.,
-    num_constraints: 200,
-    num_constant_constraints: 0,
-};
