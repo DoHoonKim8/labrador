@@ -91,16 +91,19 @@ where
         .expect("error squeezing verifier message 1"); // r matrices in R^{num_projections x n}
 
     // Message 2
-    let mut p = Vector::<R::BaseRing>::zeros(num_projections);
-    for i in 0..crs.r {
-        let s_i_vec = R::flattened(&witness.s[i]); // in R::BaseRing^{n*d}
-        let pi_i = &Pi[i];
-        for j in 0..num_projections {
+    // let mut p = Vector::<R::BaseRing>::zeros(num_projections);
+    use num_traits::Zero;
+    let mut p = vec![R::BaseRing::zero(); num_projections];
+    p.par_iter_mut().enumerate().for_each(|(j, p_j)| {
+        for i in 0..crs.r {
+            let s_i_vec = R::flattened(&witness.s[i]); // in R::BaseRing^{n*d}
+            let pi_i = &Pi[i];
             let pi_ij = &pi_i.row(j).transpose();
             let pi_ij_vec = R::flattened(pi_ij); // in R::BaseRing^{n*d}
-            p[j] += pi_ij_vec.dot(&s_i_vec);
+            *p_j += pi_ij_vec.dot(&s_i_vec);
         }
-    }
+    });
+    let p = Vector::<R::BaseRing>::from_vec(p);
     drop(span);
     merlin
         .absorb_vector_canonical::<R::BaseRing>(&p)
