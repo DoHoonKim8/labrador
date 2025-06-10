@@ -23,6 +23,10 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 indicatif = "0.17.9"
 derive_more = "2.0.1"
 
+[build-dependencies]
+bindgen = "0.74"
+cmake   = "0.1.49"
+
 [features]
 default = []
 c-binding = []
