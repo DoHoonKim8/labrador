@@ -1,0 +1,3 @@
+[submodule "labrador-c"]
+	path = labrador-c
+	url = https://github.com/lattice-dogs/labrador.git
