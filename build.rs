@@ -56,7 +56,7 @@ fn main() {
     for file in &c_files {
         cmd.arg(file);
     }
-    cmd.arg("-o").arg(src.join("liblabrador24.so"));
+    cmd.arg("-o").arg(manifest.join("liblabrador24.so"));
     let status = cmd.status().expect("failed to build liblabrador24.so");
     assert!(status.success());
 
