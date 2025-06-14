@@ -24,7 +24,7 @@ indicatif = "0.17.9"
 derive_more = "2.0.1"
 
 [build-dependencies]
-bindgen = "0.74"
+bindgen = "0.72.0"
 cmake   = "0.1.49"
 
 [features]
