@@ -66,7 +66,7 @@ fn main() {
 
     // 4) Generate bindings as before...
     let bindings = bindgen::Builder::default()
-        .header(src.join("labrador.h").to_string_lossy())
+        .header(manifest.join("labrador.h").to_string_lossy())
         .clang_arg(format!("-I{}", src.display()))
         .generate()
         .expect("Unable to generate bindings");

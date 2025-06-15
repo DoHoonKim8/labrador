@@ -27,6 +27,9 @@ use crate::shared::{
 };
 use crate::util::*;
 
+pub mod c_prover;
+
+#[cfg(not(feature = "c-binding"))]
 pub fn prove_principal_relation_oneround<'a, R: PolyRing>(
     merlin: &'a mut Merlin,
     crs: &CommonReferenceString<R>,
@@ -220,26 +223,7 @@ where
     Ok((index_next, instance_next, witness_next))
 }
 
-#[cfg(feature="c-binding")]
-pub fn prove_principal_relation<'a, R: PolyRing>(
-    _merlin: &'a mut Merlin,
-    mut crs: &CommonReferenceString<R>,
-    index: &Index<R>,
-    instance: &Instance<R>,
-    witness: &Witness<R>,
-) -> ProofResult<&'a [u8]>
-where
-    LabradorChallengeSet<R>: FromRandomBytes<R>,
-    WeightedTernaryChallengeSet<R>: FromRandomBytes<R>,
-    <R as PolyRing>::BaseRing: WithSignedRepresentative,
-    <R::BaseRing as WithSignedRepresentative>::SignedRepresentative:
-        DecompositionFriendlySignedRepresentative,
-    <R as TryFrom<u128>>::Error: Debug,
-{
-
-}
-
-#[cfg(not(feature="c-binding"))]
+#[cfg(not(feature = "c-binding"))]
 pub fn prove_principal_relation<'a, R: PolyRing>(
     merlin: &'a mut Merlin,
     mut crs: &CommonReferenceString<R>,

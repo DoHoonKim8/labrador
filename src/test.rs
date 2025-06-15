@@ -17,6 +17,7 @@ use relations::reduction::Reduction;
 use relations::{test_completeness_with_init, test_soundness_with_init};
 
 use crate::common_reference_string::CommonReferenceString;
+#[cfg(not(feature = "c-binding"))]
 use crate::prover::prove_principal_relation_oneround;
 use crate::verifier::verify_principal_relation_oneround;
 
@@ -40,6 +41,7 @@ pub struct Labrador<R: PolyRing> {
     _marker: std::marker::PhantomData<R>,
 }
 
+#[cfg(not(feature = "c-binding"))]
 impl<R: PolyRing> Reduction<PrincipalRelation<R>, PrincipalRelation<R>, CommonReferenceString<R>>
     for Labrador<R>
 where

@@ -93,6 +93,7 @@ impl<R: PolyRing, const N: usize> FalconAggregator<R, N> {
     }
 }
 
+#[cfg(not(feature = "c-binding"))]
 #[cfg(test)]
 mod tests {
     use std::time::Instant;
